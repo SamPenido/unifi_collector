@@ -18,7 +18,7 @@ This script automates the process of taking periodic snapshots from UniFi Monito
 
 - Python 3.6+
 - Chrome browser installed
-- The following Python packages:
+- The following Python packages (to be installed in a virtual environment):
   - selenium
   - webdriver-manager (optional, for automatic Chrome driver installation)
 
@@ -30,13 +30,25 @@ This script automates the process of taking periodic snapshots from UniFi Monito
    cd unifi_collector
    ```
 
-2. Install dependencies:
+2. Create and activate a virtual environment:
+   ```
+   # Create a virtual environment
+   python3 -m venv venv
+
+   # Activate the virtual environment
+   # On Linux/Mac:
+   source venv/bin/activate
+   # On Windows:
+   venv\Scripts\activate
+   ```
+
+3. Install dependencies in the virtual environment:
    ```
    pip install selenium
    pip install webdriver-manager  # Optional
    ```
 
-3. Configure the script by editing the variables at the top of `main.py`:
+4. Configure the script by editing the variables at the top of `main.py`:
    - `TARGET_URL`: The URL of your UniFi Monitor camera stream
    - `INTERVAL_SECONDS`: Time between snapshots (default: 2 seconds)
    - `COLLECT_DIR`: Directory where snapshots will be saved
@@ -45,9 +57,16 @@ This script automates the process of taking periodic snapshots from UniFi Monito
 
 ## Usage
 
-Run the script with:
+Make sure your virtual environment is activated, then run the script:
 
 ```
+# Make sure your virtual environment is activated
+# On Linux/Mac:
+source venv/bin/activate
+# On Windows:
+venv\Scripts\activate
+
+# Run the script
 python main.py
 ```
 
@@ -99,6 +118,30 @@ The script detects new snapshot files by:
 3. Generating unique filenames with timestamps for each snapshot
 
 ## Troubleshooting
+
+### Virtual Environment Issues
+
+If you encounter "externally-managed-environment" errors:
+- Make sure you've created and activated a virtual environment as shown in the installation steps
+- If using Ubuntu/Debian, ensure you have python3-venv installed:
+  ```
+  sudo apt install python3-venv
+  ```
+
+### WebDriver Issues
+
+If Chrome doesn't start properly:
+- Ensure Chrome is installed and up to date
+- Try installing the webdriver-manager package and modify the script to use it:
+  ```python
+  from webdriver_manager.chrome import ChromeDriverManager
+  from selenium.webdriver.chrome.service import Service
+  
+  service = Service(ChromeDriverManager().install())
+  driver = webdriver.Chrome(service=service, options=options)
+  ```
+
+### Button Detection Issues
 
 If the script fails to find the snapshot button:
 - Check if the URL is correct and accessible
